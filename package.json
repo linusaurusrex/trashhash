@@ -1,0 +1,15 @@
+{
+  "name": "trashhash",
+  "version": "1.0.0",
+  "description": "A program to search for duplicate files",
+  "main": "main.js",
+  "scripts": {
+    "test": "exit 0",
+    "start": "electron main.js"
+  },
+  "author": "linusaurusrex",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^1.7.5"
+  }
+}
