@@ -68,7 +68,7 @@ function enumerate(files, log) {
         if (err) {
           if (err.code == 'EPERM') {
             log.progHook('no permissions for ' + f);
-          } else throw e;
+          } else throw err;
         } else {
           let isF = stats.isFile();
           if (isF) log.nq(new File(f, stats.size));

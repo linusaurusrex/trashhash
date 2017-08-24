@@ -23,7 +23,6 @@ function progHook(data) {
     }
   }
 }
-progHook;
 
 let pageAPI = {
   elems: {
@@ -51,7 +50,7 @@ let pageAPI = {
     pageAPI.render();
 
   },
-  render() {//put the element code in another function
+  render() {
     let dup = pageAPI.elems.dupbox;
     let del = pageAPI.elems.delbox;
     for (let c of [...dup.childNodes]) dup.removeChild(c);
