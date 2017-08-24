@@ -85,6 +85,7 @@ elems.confdel.addEventListener('click', () => {
         fs.unlink(path.resolve(f), err => err); // does not handle errors
         let file = dels[k][f];
         delete dels[k][f];
+        if (Object.keys(dels[k] || {}).length == 0) delete dels[k];
         if (Object.keys(dups[k] || {}).length <= 1) delete dups[k];
         render();
       }

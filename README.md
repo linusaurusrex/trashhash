@@ -1,16 +1,16 @@
 # trashhash
 
-##Install
+## Install
 ```
 $ git clone https://github.com/linusaurusrex/trashhash.git
 $ npm install
 ```
 
-##Run
+## Run
 ```
 $ npm start [files or directories to search]
 ```
 
-##Notes
+## Notes
 There are lots of issues.
 Identical files are indicated by the same background color
