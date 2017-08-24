@@ -4,36 +4,33 @@ body, html {
     height: 100%;
     background-color: white;
 }
-.col {
-    height: 100%;
-    overflow: auto;
-}
 #colwrap {
     width: 100%;
 }
-#duplicatebox {
+.col {
+    height: 100%;
+    overflow: auto;
     position: absolute;
-    left: 0px;
     top: 0px;
-    background-color: #cff;
     width: 50%;
-    padding: 0px;
+}
+#duplicatebox {
+    left: 0px;
+    background-color: #cff;
 }
 #deletebox {
-    position: absolute;
     right: 0px;
-    top: 0px;
     background-color: #fcc;
-    width: 50%;
-}
-/*#confirmdelete {
-    position: fixed;
-    right: 0px;
-    top: 0px;
-}*/
-.file {
-    border: 1px solid black;
 }
 .contents, .col h1 {
     margin: 10px;
+}
+.file {
+    border: 1px solid black;
+}
+#addall, .movedel, #confirmdelete {
+    color: #800;
+}
+#remall, .movedup {
+    color: #088;
 }

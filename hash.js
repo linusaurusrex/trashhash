@@ -8,16 +8,22 @@ let openFiles = 0;
 module.exports = function hash(files, progHook) {
   let log = new Log(progHook);
   enumerate(files, log);
-  return log; // this returns log, but may return after the first calls to progHook, so the Log constructor sends progHook the log
+  return log;
 };
-//keep track of file info
+
+function File(name, size) {
+  this.name = name;
+  this.size = size;
+}
+
 function Log(pH) {
   this.progHook = pH;
   pH({sub: 'log', log: this});
   this.q = {};
   this.dups = {};
 }
-//hash files that have the same size
+
+// Queue files that have the same size
 Log.prototype.nq = function enqueue(f) {
   if (!this.q[f.size]) this.q[f.size] = [];
   let list = this.q[f.size];
@@ -29,7 +35,8 @@ Log.prototype.nq = function enqueue(f) {
     default: this.nqHash(list[n-1]);
   }
 };
-//hash files
+
+// Hash files
 Log.prototype.nqHash = function enqueueHash(f) {
   if (openFiles < 256) {
     openFiles++;
@@ -53,14 +60,9 @@ Log.prototype.nqHash = function enqueueHash(f) {
   } else setTimeout(() => log.nqHash(f), 2000);
 };
 
-function File(name, size) {
-  this.name = name;
-  this.size = size;
-}
-//recursively enumerate directory contents
+// Search through listed files and directories
 function enumerate(files, log) {
   for (let f of files) {
-    //openfiles check
     if (openFiles < 256) {
       openFiles++;
       fs.stat(f, (err, stats) => {
