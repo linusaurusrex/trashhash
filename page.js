@@ -57,84 +57,50 @@ let pageAPI = {
     for (let c of [...dup.childNodes]) dup.removeChild(c);
     for (let c of [...del.childNodes]) del.removeChild(c);
     for (let k of Object.keys(pageAPI.dups))
-      for (let j of Object.keys(pageAPI.dups[k])) {
-        let f = pageAPI.dups[k][j];
-        let openText = document.createTextNode('Open');
-        let opener = document.createElement('button');
-        opener.classList.add('opener');
-        opener.appendChild(openText);
-        opener.addEventListener('click', () => {
-          electron.shell.openItem(path.resolve(f.name));
-        });
-        let showText = document.createTextNode('Show in file explorer');
-        let shower = document.createElement('button');
-        shower.classList.add('shower');
-        shower.appendChild(showText);
-        shower.addEventListener('click', () => {
-          electron.shell.showItemInFolder(path.resolve(f.name));
-        });
-        let moveText = document.createTextNode('Add to delete queue');
-        let mover = document.createElement('button');
-        mover.classList.add('mover', 'movdel');
-        mover.appendChild(moveText);
-        mover.addEventListener('click', () => {
-          pageAPI.moveDupToDel(f);
-        });
-        let file = document.createElement('li');
-        file.classList.add('file');
-        file.style['background-color'] = `#${f.hash.substr(0,6)}`;
-        let name = document.createTextNode(f.name);
-        file.appendChild(name);
-        file.appendChild(document.createElement('br'));
-        file.appendChild(opener);
-        file.appendChild(shower);
-        file.appendChild(mover);
-        pageAPI.elems.dupbox.appendChild(file);
-      }
+      for (let j of Object.keys(pageAPI.dups[k]))
+        pageAPI.elems.dupbox.appendChild(pageAPI.fileElem(pageAPI.dups[k][j], false));
     for (let k of Object.keys(pageAPI.dels))
       for (let j of Object.keys(pageAPI.dels[k])) {
-        let f = pageAPI.dels[k][j];
-        let openText = document.createTextNode('Open');
-        let opener = document.createElement('button');
-        opener.classList.add('opener');
-        opener.appendChild(openText);
-        opener.addEventListener('click', () => {
-          electron.shell.openItem(path.resolve(f.name));
-        });
-        let showText = document.createTextNode('Show in file explorer');
-        let shower = document.createElement('button');
-        shower.classList.add('shower');
-        shower.appendChild(showText);
-        shower.addEventListener('click', () => {
-          electron.shell.showItemInFolder(path.resolve(f.name));
-        });
-        let moveText = document.createTextNode('Remove from delete queue');
-        let mover = document.createElement('button');
-        mover.classList.add('mover', 'movdel');
-        mover.appendChild(moveText);
-        mover.addEventListener('click', () => {
-          pageAPI.moveDelToDup(f);
-        });
-        let file = document.createElement('li');
-        file.classList.add('file');
-        file.style['background-color'] = `#${f.hash.substr(0,6)}`;
-        let name = document.createTextNode(f.name);
-        file.appendChild(name);
-        file.appendChild(document.createElement('br'));
-        file.appendChild(opener);
-        file.appendChild(shower);
-        file.appendChild(mover);
-        pageAPI.elems.delbox.appendChild(file);
+        pageAPI.elems.delbox.appendChild(pageAPI.fileElem(pageAPI.dels[k][j], true));
       }
+  },
+  fileElem(f, del) {
+    let openText = document.createTextNode('Open');
+    let opener = document.createElement('button');
+    opener.classList.add('opener');
+    opener.appendChild(openText);
+    opener.addEventListener('click', () => {
+        electron.shell.openItem(path.resolve(f.name));
+    });
+    let showText = document.createTextNode('Show in file explorer');
+    let shower = document.createElement('button');
+    shower.classList.add('shower');
+    shower.appendChild(showText);
+    shower.addEventListener('click', () => {
+        electron.shell.showItemInFolder(path.resolve(f.name));
+    });
+    let moveText = document.createTextNode(`${del ? 'Remove from' : 'Add to'} delete queue`);
+    let mover = document.createElement('button');
+    mover.classList.add('mover', 'movdel');
+    mover.appendChild(moveText);
+    mover.addEventListener('click', () => {
+        pageAPI[del ? 'moveDelToDup' : 'moveDupToDel'](f);
+    });
+    let file = document.createElement('li');
+    file.classList.add('file');
+    file.style['background-color'] = `#${f.hash.substr(0,6)}`;
+    let name = document.createTextNode(f.name);
+    file.appendChild(name);
+    file.appendChild(document.createElement('br'));
+    file.appendChild(opener);
+    file.appendChild(shower);
+    file.appendChild(mover);
+    return file;
   }
 };
 pageAPI.elems.confdel.addEventListener('click', () => {
-  if (confirm('You are about to delete the listed files. Do so at your own risk. If you are scared, click "cancel"')) {
-    for (let k of Object.keys(pageAPI.dels)) {
-      for (let f of Object.keys(pageAPI.dels[k])) {
-        if (confirm('fs.unlink(path.resolve(f), err => err)\n' + `Delete ${path.resolve(f)}?`))//remove FILE info also
-          void 0;//fs.unlink(path.resolve(f), err => err)
-      }
-    }
-  }
+  if (confirm('You are about to delete the listed files. Do so at your own risk. If you are scared, click "cancel"'))
+    for (let k of Object.keys(pageAPI.dels))
+      for (let f of Object.keys(pageAPI.dels[k]))
+        fs.unlink(path.resolve(f), err => err)
 });
