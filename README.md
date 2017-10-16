@@ -3,6 +3,7 @@
 ## Install
 ```
 $ git clone https://github.com/linusaurusrex/trashhash.git
+$ cd trashhash
 $ npm install
 ```
 
