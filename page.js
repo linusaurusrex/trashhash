@@ -88,8 +88,8 @@ elems.confdel.addEventListener('click', () => {
         delete dels[k][f];
         if (Object.keys(dels[k] || {}).length == 0) delete dels[k];
         if (Object.keys(dups[k] || {}).length <= 1) delete dups[k];
-        render();
       }
+  render();
 });
 elems.addall.addEventListener('click', () => {
   for (let b of [...document.querySelectorAll('.movedel')]) b.click();
