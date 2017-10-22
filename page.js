@@ -76,7 +76,8 @@ let elems = {
   addall: document.querySelector('#addall'),
   remall: document.querySelector('#remall'),
   delbox: document.querySelector('#deletebox .contents ul'),
-  dupbox: document.querySelector('#duplicatebox .contents ul')
+  dupbox: document.querySelector('#duplicatebox .contents ul'),
+  prog: document.querySelector('#progress')
 };
 elems.confdel.addEventListener('click', () => {
   if (confirm('You are about to delete the listed files. Do so at your own risk. If you are scared, click "cancel"'))
@@ -99,6 +100,7 @@ elems.remall.addEventListener('click', () => {
 
 // Receive hashes
 function progHook(data) {
+  if (data.sub == 'prog') elems.prog.classList[data.i ? 'remove' : 'add']('noprogress')
   if (data.sub == 'log') progHook.log = data.log;
   if (data.sub == 'hash') {
     let n = data.log.dups[data.file.hash].length
@@ -110,12 +112,9 @@ function progHook(data) {
   }
 }
 
-// Receive files from command line
-electron.ipcRenderer.on('ping', (event, msg) => {
-  let data = JSON.parse(msg);
-  if (data.sub == 'dirlist') {
-    log = hash(data.dirs, progHook);
-  }
-});
+// Get files from command line
+let args = electron.remote.process.argv;
+let dirs = args.slice(2, args.length); // TODO: Check if compiled
 
+log = hash(dirs, progHook);
 

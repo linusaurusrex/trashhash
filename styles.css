@@ -34,3 +34,9 @@ body, html {
 #remall, .movedup {
     color: #088;
 }
+.boxhead h1 {
+    display: inline;
+}
+.noprogress {
+    display: none;
+}
