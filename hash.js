@@ -19,6 +19,7 @@ function File(name, size) {
 function Log(pH) {
   this.progHook = pH;
   pH({sub: 'log', log: this});
+  this.hashing = 0;
   this.q = {};
   this.dups = {};
 }
@@ -38,6 +39,12 @@ Log.prototype.nq = function enqueue(f) {
 
 // Hash files
 Log.prototype.nqHash = function enqueueHash(f) {
+  this.hashing++; // TODO: still need generic progress indicator (searching files)
+  this.progHook({
+    sub: 'prog',
+    log: this,
+    i: this.hashing
+  });
   if (openFiles < 256) {
     openFiles++;
     let hash = crypto.createHash('sha1');
@@ -56,6 +63,12 @@ Log.prototype.nqHash = function enqueueHash(f) {
         file: f
       });
       openFiles--;
+      this.hashing--;
+      this.progHook({
+        sub: 'prog',
+        log: this,
+        i: this.hashing
+      });
     });
   } else setTimeout(() => log.nqHash(f), 2000);
 };
